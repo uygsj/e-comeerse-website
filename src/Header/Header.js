@@ -1,23 +1,35 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { Navbar, Nav, Container, Button } from 'react-bootstrap';
 import { useContext } from "react";
-import { CartContext } from '../Store/CartContext'; // Import CartContext, not Cart
+import { CartContext } from '../Store/CartContext';
 
 const Header = (props) => {
-  const cart = useContext(CartContext); // Use CartContext
+  const cart = useContext(CartContext);
 
   return (
     <>
       <Navbar bg="dark" variant="dark" expand="md">
         <Container>
           <Nav className="mr-auto">
-            <Nav.Link href="/">HOME</Nav.Link>
-            <Nav.Link href="/store">STORE</Nav.Link>
-            <Nav.Link href="/about">ABOUT</Nav.Link>
-            <Nav.Link href="/contact">CONTACT US</Nav.Link>
-            
-            <Nav.Link href="/movies">MOVIES</Nav.Link>
+            <Nav.Link as={NavLink} to="/" activeClassName="active" end>
+              HOME
+            </Nav.Link>
+            <Nav.Link as={NavLink} to="/store" activeClassName="active">
+              STORE
+            </Nav.Link>
+            <Nav.Link as={NavLink} to="/about" activeClassName="active">
+              ABOUT
+            </Nav.Link>
+            <Nav.Link as={NavLink} to="/contact" activeClassName="active">
+              CONTACT US
+            </Nav.Link>
+            <Nav.Link as={NavLink} to="/movies" activeClassName="active">
+              MOVIES
+            </Nav.Link>
+            <Nav.Link as={NavLink} to="/login" activeClassName="active">
+              LOGIN
+            </Nav.Link>
           </Nav>
         </Container>
       </Navbar>
@@ -25,8 +37,7 @@ const Header = (props) => {
         <div>
           <Link to="/cart">
             <Button>
-              Cart - {cart.cart.length} - items {/* Access the cart array from CartContext */}
-               
+              Cart - {cart.cart.length} - items
             </Button>
           </Link>
         </div>

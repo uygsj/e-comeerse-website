@@ -8,8 +8,9 @@ import { CartProvider } from './Store/CartContext';
 import Contact from './Header/Contact';
 import Home from './Header/Home';
 import Movies from './Movies/Movies';
-import ProductDetail from './Product/ProductDetail'; // Import the ProductDetail component
-import {ProductArr} from "./Product/ProductDetail"
+import ProductDetail from './Product/ProductDetail';
+import Login from './Header/Login';
+import {ProductArr} from './Product/ProductDetail';
 
 const App = () => {
   return (
@@ -24,6 +25,8 @@ const App = () => {
             <Route path="/about" element={<About />} />
             <Route path="/movies" element={<Movies />} />
             <Route path="/contact" element={<Contact />} />
+            {/* Add a route for the login page */}
+            <Route path="/login" element={<Login />} />
             <Route path="/product/:productId" element={<ProductDetail products={ProductArr} />} />
           </Routes>
         </Router>

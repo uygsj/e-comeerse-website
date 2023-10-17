@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
-import AuthContext from "../store/auth-Context";
+import AuthContext from "../Store/AuthContext";
 import { Button, Container, Form } from "react-bootstrap";
 
 const Login = () => {
@@ -16,16 +16,14 @@ const Login = () => {
 
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
-  };
-
-  const submitHandler = (e) => {
+  };const submitHandler = (e) => {
     e.preventDefault();
-
+  
     const enteredEmail = emailRef.current.value;
     const enteredPassword = passwordRef.current.value;
     setIsLoading(true);
     let url;
-
+  
     if (isLogin) {
       url =
         "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBZnsryIn3EL7dA9W-HgnP0X6EXabzgASU";
@@ -33,7 +31,7 @@ const Login = () => {
       url =
         "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBZnsryIn3EL7dA9W-HgnP0X6EXabzgASU";
     }
-
+  
     fetch(url, {
       method: "POST",
       body: JSON.stringify({
@@ -55,19 +53,24 @@ const Login = () => {
             if (data && data.error && data.error.message) {
               errorMessage = data.error.message;
             }
-
+  
             throw new Error(errorMessage);
           });
         }
       })
       .then((data) => {
+        // Store the bearer token in context
         authCtx.login(data.idToken);
-        history("/");
+        // Store the bearer token in local storage
+        localStorage.setItem("token", data.idToken);
+        // Redirect the user to the products page
+        history("/store");
       })
       .catch((error) => {
         alert(error.message);
       });
   };
+  
 
   return (
     <Container className="d-flex justify-content-center align-items-center h-100">
