@@ -1,115 +1,50 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import Row from 'react-bootstrap/esm/Row';
+import Col from 'react-bootstrap/esm/Col';
 import { useParams } from 'react-router-dom';
-import { Container, Row, Col, Image } from 'react-bootstrap'; 
-import { Link } from 'react-router-dom';
+import { CartContext } from '../Store/CartContext';
 
-export const ProductArr = [
-    {
-        id: 1,
-        title: 'Colors',
-        price: 100,
-        imageUrl: 'https://prasadyash2411.github.io/ecom-website/img/Album%201.png',
-      ProductReview: [
-  
-        { name: 'Neel', review: 'I recommend this product, It is actually nice'},
-  
-        { name: 'Pooja', review: 'ok, product it can be better'},
-  
-        { name: 'Nisha' ,  review: 'good in this price'},
-  
-        { name: 'Ram', review: 'worth it'},
-  
-    ]
-    },
-  
-    {
-        id: 2,
-        title: 'Black and white Colors',
-        price: 50,
-        imageUrl: 'https://prasadyash2411.github.io/ecom-website/img/Album%202.png',
-      ProductReview: [
-  
-        { name: 'Neel', review: 'I recommend this product, It is actually nice'},
-  
-        { name: 'Divya', review: 'ok, product it can be better'},
-  
-        { name: 'Ravi' ,  review: 'good in this price, want to buy more in future'},
-  
-        { name: 'Ram', review: 'worth it'},
-  
-    ]
-    },
-  
-    {
-      
-    id: 3,
-    title: 'Yellow and Black Colors',
-    price: 70,
-    imageUrl: 'https://prasadyash2411.github.io/ecom-website/img/Album%203.png',
-      ProductReview: [
-  
-        { name: 'Neel Nithin', review: 'I recommend this product, It is actually nice'},
-  
-        { name: 'Pratha', review: 'ok, product it can be better'},
-  
-        { name: 'Disha' ,  review: 'good in this price, want to buy more in future'},
-  
-        { name: 'Rameshwar', review: 'worth it, i will recommed this to everyone'},
-  
-    ]
-    },
-  
-    {
-      id: 4,
-      title: 'Blue Color',
-      price: 100,
-      imageUrl: 'https://prasadyash2411.github.io/ecom-website/img/Album%204.png',
-      ProductReview: [
-  
-        { name: 'Nitin', review: 'I recommend this product, It is actually nice'},
-  
-        { name: 'Pratha', review: 'ok, product it can be better'},
-  
-        { name: 'Disha' ,  review: 'good in this price, want to buy more in future'},
-  
-        { name: 'Rajat', review: 'worth it, i will recommed this to everyone'},
-  
-    ]
-    },
-  
-  ];
-  
+const ProductDetail = (props) => {
+  const cartCtx = useContext(CartContext);
+  const params = useParams();
+  const storeId = parseInt(params.storeId, 10);
 
- 
-const ProductDetail = ({ products }) => {
-  const { productId } = useParams();
-  const product = products.find((p) => p.id === parseInt(productId, 10));
+  // Find the product in the productsList array based on the storeId
+  const obj = props.products.find(product => product.id === storeId);
 
-  if (!product) {
-    return <div className="alert alert-danger">Product not found.</div>;
-  }
+  console.log(params);
+
+  const submitHandler = () => {
+    const newItem = {
+      id: obj.id,
+      title: obj.title,
+      price: obj.price,
+      imageUrl: obj.imageUrl,
+      quantity: 1,
+    };
+
+    cartCtx.addItem(newItem);
+    console.log(newItem);
+  };
 
   return (
-    <Container>
-      <Row>
-        <Col>
-          <h2>{product.title}</h2>
-          <Link to={`/product/${productId}`}> {/* Wrap the image in Link */}
-            <Image src={product.imageUrl} alt={product.title} fluid />
-          </Link>
-          <p>Price: <strong>${product.price}</strong></p>
-
-          <h3>Product Reviews</h3>
-          <ul className="list-group">
-            {product.ProductReview.map((review, id) => (
-              <li key={id} className="list-group-item">
-                <strong>{review.name}</strong>: {review.review}
-              </li>
-            ))}
-          </ul>
-        </Col>
-      </Row>
-    </Container>
+    <Row style={{ paddingTop: "10%" }} className='productpage-main container'>
+      {console.log(storeId, obj.imageUrl, obj.id)}
+      <Col style={{ "margin": "0 auto" }}>
+        <img src={obj.imageUrl} alt="ProductPage" width="90%" height="90%" />
+        <button onClick={submitHandler} style={{ width: "90%", backgroundColor: "blue", color: "white" }}>Buy Now</button>
+      </Col>
+      <Col className='pt-5 ps-5'>
+        <h3>Title: {obj.title}</h3>
+        <p style={{ color: "green", fontWeight: "bold" }}>Special Price</p>
+        <h2>Price: Rs ${obj.price}/-</h2>
+        <div>23,453 Ratings and 1,765 Reviews</div>
+        <div>Available offers</div>
+        <div>Buy With ICICI Bank credit card and get 10% discount</div>
+        <div>Buy With IndusInd Bank credit card and get 5% discount</div>
+        <div>Buy With SBI Bank credit card and get 5% discount and save the money</div>
+      </Col>
+    </Row>
   );
 };
 

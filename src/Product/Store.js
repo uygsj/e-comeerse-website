@@ -3,7 +3,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import ProductCard from './ProductCard';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 
-const productsList = [
+export const productsList = [
   {
     id: 1,
     title: 'Colors',
@@ -36,9 +36,9 @@ const Store = (props) => {
       <Row>
         {productsList.map((product) => (
           <Col xs={12} sm={6} md={4} lg={3} key={product.id}>
-            <Link to={`/product/${product.id}`}> {/* Add a Link to the product detail page */}
-              <ProductCard id={product.id} title={product.title} price={product.price} imageUrl={product.imageUrl} />
-            </Link>
+            <Link to={`/product/ImageUrl/${product.id}`}> 
+  <ProductCard id={product.id} title={product.title} price={product.price} imageUrl={product.imageUrl} />
+</Link>
           </Col>
         ))}
       </Row>

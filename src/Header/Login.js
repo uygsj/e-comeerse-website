@@ -1,11 +1,11 @@
-import { useRef } from "react";
+
+import React, { useState, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
 import AuthContext from "../Store/AuthContext";
 import { Button, Container, Form } from "react-bootstrap";
 
 const Login = () => {
-  const history = useNavigate();
+  const navigate = useNavigate();
   const emailRef = useRef();
   const passwordRef = useRef();
 
@@ -16,14 +16,16 @@ const Login = () => {
 
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
-  };const submitHandler = (e) => {
+  };
+
+  const submitHandler = (e) => {
     e.preventDefault();
-  
+
     const enteredEmail = emailRef.current.value;
     const enteredPassword = passwordRef.current.value;
     setIsLoading(true);
     let url;
-  
+
     if (isLogin) {
       url =
         "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBZnsryIn3EL7dA9W-HgnP0X6EXabzgASU";
@@ -31,7 +33,7 @@ const Login = () => {
       url =
         "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBZnsryIn3EL7dA9W-HgnP0X6EXabzgASU";
     }
-  
+
     fetch(url, {
       method: "POST",
       body: JSON.stringify({
@@ -53,7 +55,7 @@ const Login = () => {
             if (data && data.error && data.error.message) {
               errorMessage = data.error.message;
             }
-  
+
             throw new Error(errorMessage);
           });
         }
@@ -63,15 +65,17 @@ const Login = () => {
         authCtx.login(data.idToken);
         // Store the bearer token in local storage
         localStorage.setItem("token", data.idToken);
-        // Redirect the user to the products page
-        history("/store");
+        console.log('Login successful');
+        navigate('/store'); // Redirect to the "store" page after successful login
       })
       .catch((error) => {
         alert(error.message);
+        // Redirect to the "login" page after an unsuccessful login
+        navigate('/login');
       });
   };
-  
 
+ 
   return (
     <Container className="d-flex justify-content-center align-items-center h-100">
       <div className="px-4 py-3 bg-white shadow-lg">
@@ -108,7 +112,7 @@ const Login = () => {
               onClick={switchAuthModeHandler}
               variant="secondary"
             >
-              {isLogin ? "Create new account" : "Login with existing account"}
+              {isLogin ? "Create a new account" : "Login with an existing account"}
             </Button>
           </div>
         </Form>

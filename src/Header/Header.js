@@ -12,24 +12,25 @@ const Header = (props) => {
       <Navbar bg="dark" variant="dark" expand="md">
         <Container>
           <Nav className="mr-auto">
-            <Nav.Link as={NavLink} to="/" activeClassName="active" end>
-              HOME
-            </Nav.Link>
-            <Nav.Link as={NavLink} to="/store" activeClassName="active">
-              STORE
-            </Nav.Link>
-            <Nav.Link as={NavLink} to="/about" activeClassName="active">
-              ABOUT
-            </Nav.Link>
-            <Nav.Link as={NavLink} to="/contact" activeClassName="active">
-              CONTACT US
-            </Nav.Link>
-            <Nav.Link as={NavLink} to="/movies" activeClassName="active">
-              MOVIES
-            </Nav.Link>
-            <Nav.Link as={NavLink} to="/login" activeClassName="active">
-              LOGIN
-            </Nav.Link>
+          <Nav.Link as={NavLink} to="/" activeClassName="active" end>
+  HOME
+</Nav.Link>
+<Nav.Link as={NavLink} to="/store" activeClassName="active">
+  STORE
+</Nav.Link>
+<Nav.Link as={NavLink} to="/about" activeClassName="active">
+  ABOUT
+</Nav.Link>
+<Nav.Link as={NavLink} to="/contact" activeClassName="active">
+  CONTACT US
+</Nav.Link>
+<Nav.Link as={NavLink} to="/movies" activeClassName="active">
+  MOVIES
+</Nav.Link>
+<Nav.Link as={NavLink} to="/login" activeClassName="active">
+  LOGIN
+</Nav.Link>
+
           </Nav>
         </Container>
       </Navbar>
