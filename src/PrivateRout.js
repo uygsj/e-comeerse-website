@@ -1,15 +1,15 @@
-import React, { useContext } from 'react';
-import { Navigate } from 'react-router-dom';
-import AuthContext from './Store/AuthContext';
+import React from 'react';
+import { Navigate, Route } from 'react-router-dom';
+import { useAuth } from './Store/AuthContext';
 
-const PrivateRoute = ({ element }) => {
-  const authCtx = useContext(AuthContext);
+const PrivateRoute = ({ path, element }) => {
+  const auth = useAuth();
 
-  if (authCtx.isLoggedIn) {
-    return element;
-  } else {
-    return <Navigate to="/login" />;
-  }
+  return auth.isLoggedIn ? (
+    element
+  ) : (
+    <Navigate to="/login" replace />
+  );
 };
 
 export default PrivateRoute;

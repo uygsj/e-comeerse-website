@@ -1,18 +1,23 @@
-
-import React, { useState, useContext, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "../Store/AuthContext";
 import { Button, Container, Form } from "react-bootstrap";
+import { useAuth } from "../Store/AuthContext";
 
 const Login = () => {
   const navigate = useNavigate();
   const emailRef = useRef();
   const passwordRef = useRef();
-
-  const authCtx = useContext(AuthContext);
-
+  const authCtx = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Use the useEffect hook to navigate after successful login
+  useEffect(() => {
+    if (authCtx.isLoggedIn) {
+      navigate('/store'); // Redirect to the "Store" page
+    }
+  }, [authCtx.isLoggedIn, navigate]); // Include 'navigate' in the dependency array
+  
 
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
@@ -20,18 +25,15 @@ const Login = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-
     const enteredEmail = emailRef.current.value;
     const enteredPassword = passwordRef.current.value;
     setIsLoading(true);
     let url;
 
     if (isLogin) {
-      url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBZnsryIn3EL7dA9W-HgnP0X6EXabzgASU";
+      url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBZnsryIn3EL7dA9W-HgnP0X6EXabzgASU";
     } else {
-      url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBZnsryIn3EL7dA9W-HgnP0X6EXabzgASU";
+      url = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBZnsryIn3EL7dA9W-HgnP0X6EXabzgASU";
     }
 
     fetch(url, {
@@ -55,27 +57,22 @@ const Login = () => {
             if (data && data.error && data.error.message) {
               errorMessage = data.error.message;
             }
-
             throw new Error(errorMessage);
           });
         }
       })
       .then((data) => {
-        // Store the bearer token in context
+        setIsLoading(true);
         authCtx.login(data.idToken);
-        // Store the bearer token in local storage
         localStorage.setItem("token", data.idToken);
         console.log('Login successful');
         navigate('/store'); // Redirect to the "store" page after successful login
       })
       .catch((error) => {
         alert(error.message);
-        // Redirect to the "login" page after an unsuccessful login
-        navigate('/login');
       });
   };
 
- 
   return (
     <Container className="d-flex justify-content-center align-items-center h-100">
       <div className="px-4 py-3 bg-white shadow-lg">

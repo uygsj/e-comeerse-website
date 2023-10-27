@@ -1,38 +1,114 @@
-// CartContext.js
-import React, { useState, createContext, useContext } from 'react';
+import React, { useState, createContext, useContext, useEffect } from 'react';
 
 export const CartContext = createContext({
   cart: [],
   addToCart: () => {},
   removeFromCart: () => {},
+  updateCartItem: () => {},
+  fetchCartData: () => {},
 });
 
 export const CartProvider = (props) => {
   const [cart, setCart] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // Fetch initial cart data when the component mounts
+    fetchCartData();
+  }, []);
 
   const addToCart = (item) => {
-    // Check if the item is already in the cart
     const itemIndex = cart.findIndex((cartItem) => cartItem.id === item.id);
 
     if (itemIndex !== -1) {
-      // Item is already in the cart, so update the quantity
       const updatedCart = [...cart];
       updatedCart[itemIndex].quantity += 1;
       setCart(updatedCart);
+      updateCartItem(cart[itemIndex]);
     } else {
-      // Item is not in the cart, so add it with quantity 1
-      setCart([...cart, { ...item, quantity: 1 }]);
+      const newItem = { ...item, quantity: 1 };
+      setCart([...cart, newItem]);
+      createCartItem(newItem);
     }
   };
+
   const removeFromCart = (itemId) => {
-    console.log("Removing item from cart with id:", itemId);
-    setCart((prevCart) => prevCart.filter((item) => item.id !== itemId));
+    const itemIndex = cart.findIndex((item) => item.id === itemId);
+    if (itemIndex !== -1) {
+      const removedItem = cart[itemIndex];
+      setCart((prevCart) => prevCart.filter((item) => item.id !== itemId));
+      deleteCartItem(removedItem);
+    }
   };
 
-  console.log("Current Cart:", cart);
+  const updateCartItem = (item) => {
+    const updatedItem = { ...item, quantity: item.quantity };
+    fetch(`https://crudcrud.com/api/c1541a94433746f49b91900182f7728a/cart/${item.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedItem),
+    })
+      .then((response) => {
+        if (response.ok) {
+          // Handle the success case
+        } else {
+          // Handle the error case
+        }
+      });
+  };
+
+  const createCartItem = (item) => {
+    fetch('https://crudcrud.com/api/c1541a94433746f49b91900182f7728a/cart', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(item),
+    })
+      .then((response) => {
+        if (response.ok) {
+          // Handle the success case
+        } else {
+          // Handle the error case
+        }
+      });
+  };
+
+  const deleteCartItem = (item) => {
+    fetch(`https://crudcrud.com/api/c1541a94433746f49b91900182f7728a/cart/${item.id}`, {
+      method: 'DELETE',
+    })
+      .then((response) => {
+        if (response.ok) {
+          // Handle the success case
+        } else {
+          // Handle the error case
+        }
+      });
+  };
+
+  const fetchCartData = async () => {
+    setLoading(true);
+    fetch('https://crudcrud.com/api/c1541a94433746f49b91900182f7728a/cart')
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          // Handle the error case
+        }
+      })
+      .then((data) => {
+        setCart(data);
+        setLoading(false);
+      });
+  };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart }}>
+    <CartContext.Provider
+      value={{ cart, addToCart, removeFromCart, updateCartItem, fetchCartData }}
+    >
       {props.children}
     </CartContext.Provider>
   );

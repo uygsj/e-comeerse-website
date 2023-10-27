@@ -36,7 +36,7 @@ const Store = (props) => {
       <Row>
         {productsList.map((product) => (
           <Col xs={12} sm={6} md={4} lg={3} key={product.id}>
-            <Link to={`/product/ImageUrl/${product.id}`}> 
+            <Link to={`/product/${product.id}`}> 
   <ProductCard id={product.id} title={product.title} price={product.price} imageUrl={product.imageUrl} />
 </Link>
           </Col>

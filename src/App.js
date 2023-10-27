@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Header from './Header/Header';
 import Cart from './Header/Cart';
 import Store from './Product/Store';
@@ -11,13 +11,9 @@ import Movies from './Movies/Movies';
 import ProductDetail from './Product/ProductDetail';
 import Login from './Header/Login';
 import { productsList } from './Product/Store';
-import { AuthContextProvider } from './Store/AuthContext';
-import AuthContext from './Store/AuthContext';
+import { AuthContextProvider, useAuth } from './Store/AuthContext';
 
 const App = () => {
-  const authCtx = useContext(AuthContext);
-  const [isLoggedIn, setIsLoggedIn] = useState(!!authCtx.token);
-
   return (
     <AuthContextProvider>
       <CartProvider>
@@ -29,15 +25,24 @@ const App = () => {
             <Route path="/about" element={<About />} />
             <Route path="/movies" element={<Movies />} />
             <Route path="/contact" element={<Contact />} />
+            
+            <Route path="/store" element={<StoreContent />} />
+            {/* Use a separate component for the "Store" route, see below. */}
 
-            <Route path="/store" element={<Store />} />
-  <Route path="/login" element={<Login onLogin={() => setIsLoggedIn(true)} />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/product/:storeId" element={<ProductDetail products={productsList} />} />
           </Routes>
         </Router>
       </CartProvider>
     </AuthContextProvider>
   );
+};
+
+const StoreContent = () => {
+  const authCtx = useAuth();
+  const { isLoggedIn } = authCtx;
+
+  return isLoggedIn ? <Store /> : <Navigate to="/login" />;
 };
 
 export default App;
